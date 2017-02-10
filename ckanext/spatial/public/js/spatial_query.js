@@ -20,7 +20,6 @@ this.ckan.module('spatial-query', function ($, _) {
       buttons: [
         '<div id="dataset-map-edit-buttons">',
         '<a href="javascript:;" class="btn cancel">Cancel</a> ',
-        '<a href="javascript:;" class="btn apply disabled">Apply</a>',
         '</div>'
       ].join('')
     },
@@ -157,7 +156,14 @@ this.ckan.module('spatial-query', function ($, _) {
         extentLayer = e.layer;
         $('#ext_bbox').val(extentLayer.getBounds().toBBoxString());
         map.addLayer(extentLayer);
-        $('.apply', buttons).removeClass('disabled').addClass('btn-primary');
+        $('body').removeClass('dataset-map-expanded');
+          is_exanded = false;
+          resetMap();
+          // Eugh, hacky hack.
+          setTimeout(function() {
+            map.fitBounds(extentLayer.getBounds());
+            submitForm();
+          }, 200);
       });
 
       // Record the current map view so we can replicate it after submitting
